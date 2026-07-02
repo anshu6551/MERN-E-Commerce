@@ -2,16 +2,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const DBCon = require("./app/config/db");
 const dotenv = require("dotenv");
-
-
+const mainRoute = require("./app/routes/indexRoute")
 
 
 dotenv.config();
-
-const app = express();
 DBCon();
+const app = express();
 
 
+app.use(express.json());
+app.use('/api/v1',mainRoute)
 
 app.get("/", (req, res) => {
     res.send("E-commerce backend is running");
