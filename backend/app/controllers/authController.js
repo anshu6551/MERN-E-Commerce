@@ -72,7 +72,7 @@ async userRegister(req, res) {
       return res.status(httpStatusCode.CREATED).json({
         success: true,
         message: "Registration successful! Please check your email to verify your account.",
-        token: verificationToken,
+        
       });
 
     } catch (err) {
