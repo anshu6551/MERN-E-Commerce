@@ -81,30 +81,42 @@ async userRegister(req, res) {
     }
   }
 
-
   //verify email
 
   async verifyEmail(req,res){
      try{
         const {token}= req.query;
         if(!token){
-            return res.status(httpStatusCode.BAD_REQUEST).json({success:false,message:"Token is required"});
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+              success:false,
+              message:"Token is required"
+            });
             
         }
         const user = await User.findOne({verificationToken:token,verificationTokenExpiry:{$gt:Date.now()}});
         if(!user){
-            return res.status(httpStatusCode.BAD_REQUEST).json({success:false,message:"Invalid or expired token"});
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+              success:false,
+              message:"Invalid or expired token"
+            });
         }   
         user.isVerified = true;
         user.verificationToken = undefined;
         user.verificationTokenExpiry = undefined;
         await user.save();
-        return res.status(httpStatusCode.OK).json({success:true,message:"Email verified successfully"});
+
+        return res.status(httpStatusCode.OK).json({
+          success:true,
+          message:"Email verified successfully"
+        });
 
      }
      catch(err){
-        console.log(err);
-        return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal Server Error" });
+        console.log("Verification Error:",err);
+        return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+           success: false, 
+           message: "Internal Server Error"
+           });
   }
 
 }
