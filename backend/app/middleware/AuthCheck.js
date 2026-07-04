@@ -11,15 +11,13 @@ const AuthCheck = (req, res, next) => {
             message: "Token is required for access this url"
         })
     }
-
     if (token.startsWith('Bearer')) {
         token = token.split(' ')[1];
     }
-
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
-
+        console.log(req?.anshu,'reqUser');
     }
     catch (err) {
         return res.status(httpStatusCode.BAD_REQUEST).json({

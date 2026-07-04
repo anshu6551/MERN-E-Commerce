@@ -14,14 +14,17 @@ const reviewSchema = new mongoose.Schema({
     rating:{
         type:Number,
         required:true,
-        min:1,
-        max:5
+        min:[1],
+        max:[5]
     },
     comment:{
         type:String,
-        required:true
+        required:[true],
+        trim: true
     }
-})
+},
+{timestamps: true}
+)
 
 
 module.exports = mongoose.model("Review",reviewSchema)
