@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const DBCon = require("./app/config/db");
 const dotenv = require("dotenv");
 const mainRoute = require("./app/routes/indexRoute")
+const cors = require("cors")
 
 
 dotenv.config();
