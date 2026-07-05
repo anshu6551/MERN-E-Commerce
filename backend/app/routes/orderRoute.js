@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const orderController = require("../controllers/orderController");
-const AuthCheck = require("../middlewares/AuthCheck");
+const AuthCheck = require("../middleware/AuthCheck");
 
 // 1. Customer Endpoint: Checkout/Place Order from Cart
 router.post("/create-order", AuthCheck, orderController.createOrder);

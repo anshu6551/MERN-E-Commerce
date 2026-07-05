@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const WalletConfig = require("../models/WalletConfig");
-const httpStausCode = require("../utils/httpsStatusCode");
+const httpStausCode = require("../utils/httpStatusCode");
 
 class userController {
   

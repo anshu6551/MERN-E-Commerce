@@ -54,51 +54,122 @@ class cartController {
     }
 
     //get cart details
+    // async getCart(req, res) {
+    //     try {
+    //         const adminId = req?.user?.id;
+
+    //         const cart = await Cart.findOne({ adminId }).populate({
+    //             path: "products.productId",
+    //             model: Product,
+    //             select: "title price images stock coinRewardEligible",
+    //         });
+
+    //         if (!cart || cart.products.length == 0) {
+    //             return res.status(httpStatusCode.OK).json({
+    //                 sucess: true,
+    //                 message: "your cart is empty",
+    //                 data: {
+    //                     products: [],
+    //                     tottalPrice: 0
+    //                 }
+    //             });
+    //         }
+
+    //         let totalPrice = 0;
+    //         cart.products.forEach((item) => {
+    //             if (item.productId && item.productId.price) {
+    //                 const qty = Number(item.quantity) || 1;
+    //                 totalPrice += item.productId.price * qty;
+    //             }
+    //         });
+
+    //         return res.status(httpStatusCode.OK).json({
+    //             success: true,
+    //             message: "cart details get successfully",
+    //             data: {
+    //                 cartId: cart._id,
+    //                 products: cart.products,
+    //                 totalPrice: totalPrice,
+    //             },
+    //         });
+    //     } catch (err) {
+    //         return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+    //             success: false,
+    //             message: `${err.message || "Internal Server Error"}`
+    //         })
+    //     }
+    // }
+
     async getCart(req, res) {
-        try {
-            const adminId = req?.user?.id;
+    try {
+        const adminId = req?.user?.id;
 
-            const cart = await Cart.findOne({ adminId }).populate({
-                path: "products.productId",
-                model: Product,
-                select: "title price images stock coinRewardEligible",
+        if (!adminId) {
+            return res.status(httpStatusCode.BAD_REQUEST).json({
+                success: false,
+                message: "User ID is required"
             });
+        }
 
-            if (!cart || cart.products.length == 0) {
-                return res.status(httpStatusCode.OK).json({
-                    sucess: true,
-                    message: "your cart is empty",
-                    data: {
-                        products: [],
-                        tottalPrice: 0
-                    }
-                });
-            }
+        const cart = await Cart.findOne({ adminId }).populate({
+            path: "products.productId",
+            model: Product,
+            select: "title price images stock coinRewardEligible",
+        });
 
-            let totalPrice = 0;
-            cart.products.forEach((item) => {
-                if (item.productId && item.productId.price) {
-                    const qty = item.quantity || 1;
-                    totalPrice += item.productId.price * qty;
+        // 1. Check if cart doesn't exist or is completely empty
+        if (!cart || !cart.products || cart.products.length === 0) {
+            return res.status(httpStatusCode.OK).json({
+                success: true, // Fixed typo: sucess -> success
+                message: "Your cart is empty",
+                data: {
+                    products: [],
+                    totalPrice: 0 // Fixed typo: tottalPrice -> totalPrice
                 }
             });
+        }
 
+        let totalPrice = 0;
+        
+        // 2. Filter out items where the underlying product no longer exists (orphaned references)
+        const validProducts = cart.products.filter((item) => {
+            if (item.productId && typeof item.productId.price === 'number') {
+                const qty = Number(item.quantity) || 1;
+                totalPrice += item.productId.price * qty;
+                return true;
+            }
+            return false; // Excludes product from the response if it was deleted from the DB
+        });
+
+        // 3. Fallback if all products in the cart were orphaned/invalid
+        if (validProducts.length === 0) {
             return res.status(httpStatusCode.OK).json({
                 success: true,
-                message: "cart details get successfully",
+                message: "Your cart is empty",
                 data: {
-                    cartId: cart._id,
-                    products: cart.products,
-                    totalPrice: totalPrice,
-                },
+                    products: [],
+                    totalPrice: 0
+                }
             });
-        } catch (err) {
-            return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: `${err.message || "Internal Server Error"}`
-            })
         }
+
+        return res.status(httpStatusCode.OK).json({
+            success: true,
+            message: "Cart details retrieved successfully",
+            data: {
+                cartId: cart._id,
+                products: validProducts,
+                totalPrice: Number(totalPrice.toFixed(2)), // Prevents JavaScript floating-point issues (e.g., 19.99999999)
+            },
+        });
+
+    } catch (err) {
+        return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: err.message || "Internal Server Error"
+        });
     }
+}
 
     //remove product from cart
 

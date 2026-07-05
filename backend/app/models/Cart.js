@@ -6,7 +6,8 @@ const cartSchema = new mongoose.Schema({
         ref:'User',
         required:true
      },
-     products:[{ 
+     products:[
+        { 
         productId:{ 
             type:mongoose.Schema.Types.ObjectId,
             ref: 'product',
@@ -18,7 +19,8 @@ const cartSchema = new mongoose.Schema({
         required:true,
         min:[1,'Min one product is required']
       }
-     }], 
+     }
+    ], 
      
 });
 module.exports = mongoose.model('Cart',cartSchema);

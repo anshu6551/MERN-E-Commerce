@@ -77,7 +77,7 @@ class orderController {
 
             //3.New Order Create karenge
             const newOrder = await Order.create({
-                userId: adminId,
+                adminId: adminId,
                 items: orderItems,
                 totalAmount,
                 walletPaymentAmount: 0,
@@ -140,7 +140,7 @@ class orderController {
   async getAllOrdersForAdmin(req, res) {
     try {
       const orders = await Order.find()
-        .populate("userId", "name email")
+        .populate("adminId", "name email")
         .populate("items.productId", "title price")
         .sort({ createdAt: -1 });
 
@@ -160,7 +160,7 @@ class orderController {
       const { orderId } = req.params; 
       const { status } = req.body;    
 
-      console.log("🔥 BACKEND HIT HUA! Order ID:", orderId, "Naya Status:", status);
+      console.log(" Order ID:", orderId, "Naya Status:", status);
 
       if (!status) {
         return res.status(400).json({

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
-const AdminAuthcheck = require('../middlewares/AdminAuthCheck');
-const Authcheck = require('../middlewares/AuthCheck');
+const AdminAuthcheck = require('../middleware/AdminAuthCheck');
+const Authcheck = require('../middleware/AuthCheck');
 
 // Secure Admin Management Gateways
 router.get("/admin/users", Authcheck, AdminAuthcheck, userController.getAllUsersForAdmin);

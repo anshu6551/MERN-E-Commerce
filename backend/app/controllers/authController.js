@@ -167,7 +167,7 @@ async userRegister(req, res) {
           role: extinguisher.role
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "7d" }
       );
 
       // Security Fix: Password field ko response data se hata diya hai

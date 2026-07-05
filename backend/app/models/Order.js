@@ -10,7 +10,7 @@ const orderSchema = new mongoose.Schema({
         {
             productId: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "product",
+                ref: "Product",
                 required: true,
             },
             quantity: {
@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
             },
             priceAtPurchase: {
                 type: Number,
-                required: true
+                required: true //purchase ke time original price record krne ke liy
             }
         },
     ],
@@ -36,7 +36,7 @@ const orderSchema = new mongoose.Schema({
     },
     remainingPaymentMethod: {
         type: String,
-        enum: ["COD", Online],
+        enum: ["COD", "Online"],
         required: true
     },
     orderStatus: {

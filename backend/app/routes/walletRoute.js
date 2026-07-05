@@ -1,7 +1,7 @@
 const express = require('express');
 const walletController = require('../controllers/walletController');
-const AdminAuthcheck = require('../middlewares/AdminAuthCheck');
-const Authcheck = require('../middlewares/AuthCheck');
+const AdminAuthcheck = require('../middleware/AdminAuthCheck');
+const Authcheck = require('../middleware/AuthCheck');
 const router = express.Router();
 
 // 1. GET Current Rules

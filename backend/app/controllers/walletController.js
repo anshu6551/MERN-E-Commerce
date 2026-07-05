@@ -1,7 +1,7 @@
 const WalletConfig = require("../models/WalletConfig");
 const User = require("../models/User");
 const Transaction = require("../models/Transaction");
-const httpStausCode = require("../utils/httpsStatusCode");
+const httpStausCode = require("../utils/httpStatusCode");
 
 
 class walletController {
